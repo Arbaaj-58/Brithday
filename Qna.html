@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Are You Miss Unnati?</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      /* Change the background color or use an image URL here */
+      background-color: #f0f0f0;
+      background-image: url('Qna bg.jpg'); /* Example for background image */
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      color: white; /* Text color */
+    }
+
+    .container {
+      text-align: center;
+      background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background for text */
+      padding: 30px;
+      border-radius: 10px;
+    }
+
+    h1 {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .button-container {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .button {
+      padding: 15px 25px;
+      text-decoration: none;
+      color: white;
+      font-size: 18px;
+      border-radius: 5px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .yes-button {
+      background-color: #4CAF50;
+    }
+
+    .no-button {
+      background-color: #f44336;
+    }
+
+    .button:hover {
+      opacity: 0.9;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Are you Miss Unnati, who is going to be a cabin crew?</h1>
+    <div class="button-container">
+      <!-- "Yes" button opens the corresponding file -->
+      <a href="Yes.html" class="button yes-button" target="_blank">Yes</a>
+      <!-- "No" button opens the corresponding file -->
+      <a href="No.html" class="button no-button" target="_blank">No</a>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bander Game with Obstacles</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #87CEEB;
+            height: 100%;
+        }
+        canvas {
+            display: block;
+            background-color: #87CEEB;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+    <script>
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+
+        // Full-screen canvas
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Bander attributes
+        let banderX = 50;
+        let banderY = canvas.height - 150;
+        const banderWidth = 50;
+        const banderHeight = 50;
+        let banderSpeed = 3;
+        let isJumping = false;
+        let jumpHeight = 15;
+        let jumpSpeed = 0;
+        const gravity = 0.5;
+
+        // Obstacles
+        let obstacles = [];
+        const obstacleWidth = 20;
+        let score = 0;
+        let gameOver = false;
+
+        // Bander image (use a placeholder or your own image)
+        const banderImage = new Image();
+        banderImage.src = 'https://via.placeholder.com/50/FF5733/FFFFFF?text=B';  // Replace with bander image URL
+
+        // Start the game when the space key is pressed
+        document.addEventListener("keydown", (e) => {
+            if (e.key === " " && !gameOver) {
+                if (!isJumping) {
+                    isJumping = true;
+                    jumpSpeed = -jumpHeight; // Start jumping
+                }
+            }
+            if (e.key === " " && gameOver) {
+                restartGame(); // Restart the game when space is pressed after game over
+            }
+        });
+
+        // Generate obstacles (khambhe)
+        function createObstacle() {
+            const obstacleHeight = Math.random() * 50 + 30; // Smaller height for obstacles
+            obstacles.push({
+                x: canvas.width,
+                y: canvas.height - obstacleHeight,
+                width: obstacleWidth,
+                height: obstacleHeight
+            });
+        }
+
+        // Update game logic
+        function updateGame() {
+            if (isJumping) {
+                banderY += jumpSpeed;
+                jumpSpeed += gravity; // Apply gravity
+
+                if (banderY >= canvas.height - banderHeight) {
+                    banderY = canvas.height - banderHeight;
+                    isJumping = false;
+                }
+            }
+
+            // Move obstacles
+            for (let i = 0; i < obstacles.length; i++) {
+                obstacles[i].x -= banderSpeed;
+
+                // Remove obstacles when they go off screen
+                if (obstacles[i].x + obstacles[i].width < 0) {
+                    obstacles.splice(i, 1);
+                    score++;
+                }
+
+                // Check for collision with obstacles
+                if (
+                    banderX + banderWidth > obstacles[i].x &&
+                    banderX < obstacles[i].x + obstacles[i].width &&
+                    banderY + banderHeight > obstacles[i].y
+                ) {
+                    gameOver = true;
+                }
+            }
+
+            // Adjust obstacle gap and speed based on score
+            if (score >= 1000) {
+                banderSpeed = 5; // Speed increases after score 1000
+                if (Math.random() < 0.05) {  // Increase gap between obstacles after score 1000
+                    createObstacle();
+                }
+            } else {
+                if (Math.random() < 0.02) { // Normal gap before score 1000
+                    createObstacle();
+                }
+            }
+        }
+
+        // Draw game elements
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
+
+            ctx.drawImage(banderImage, banderX, banderY, banderWidth, banderHeight); // Draw bander
+
+            // Draw obstacles (khambhe)
+            obstacles.forEach((obstacle) => {
+                ctx.fillStyle = "#8B4513"; // Brown color for obstacles
+                ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
+            });
+
+            // Display score
+            ctx.font = "20px Arial";
+            ctx.fillStyle = "#fff";
+            ctx.fillText("Score: " + score, 20, 30);
+
+            // Game Over message
+            if (gameOver) {
+                ctx.font = "30px Arial";
+                ctx.fillStyle = "#ff0000";
+                ctx.fillText("Game Over! Press Space to Restart", canvas.width / 2 - 150, canvas.height / 2);
+            }
+        }
+
+        // Main game loop
+        function gameLoop() {
+            if (gameOver) return; // Stop the game loop if game is over
+
+            updateGame(); // Update the game state
+            draw(); // Draw the updated game state
+            requestAnimationFrame(gameLoop); // Keep the game loop running
+        }
+
+        // Start the game
+        function startGame() {
+            gameOver = false;
+            score = 0;
+            obstacles = [];
+            banderY = canvas.height - banderHeight;
+            gameLoop(); // Start the game loop
+        }
+
+        // Restart the game
+        function restartGame() {
+            gameOver = false;
+            score = 0;
+            obstacles = [];
+            banderY = canvas.height - banderHeight;
+            gameLoop();
+        }
+
+        // Initial call to start the game
+        startGame();
+    </script>
+</body>
+</html>
